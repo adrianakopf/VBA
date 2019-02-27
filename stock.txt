@@ -1,0 +1,46 @@
+Sub stock()
+
+'Create a script that will loop through each year of stock data and grab the total amount
+'of volume each stock had over the year.
+'You will also need to display the ticker symbol to coincide with the total volume.
+ 
+Dim str_ticker As String
+Dim db_total_ticker As Double
+
+Dim wksheet As Worksheet
+Dim ticker_summary_row As Long
+
+
+For Each wksheet In Worksheets
+    wksheet.Activate
+                'Set Heathers
+    wksheet.Range("I1") = "Ticker"
+    wksheet.Range("J1") = "Total Stock Volume"
+                'Initialize db_total_ticker, ticker_summary_row, and str_ticker
+    db_total_ticker = 0
+    ticker_summary_row = 2
+    str_ticker = ""
+                'Determine the Last Row
+    last_row = wksheet.Cells(Rows.Count, 1).End(xlUp).Row
+                'Get ticker value and volume by row
+    For i = 2 To last_row
+                'Check tickers are different
+       If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+                'initialize ticker name
+            str_ticker = Cells(i, 1).Value
+                'add volume values
+            db_total_ticker = db_total_ticker + Cells(i, 7).Value
+                'print summary
+            Range("I" & ticker_summary_row).Value = str_ticker
+            Range("J" & ticker_summary_row).Value = db_total_ticker
+            ticker_summary_row = ticker_summary_row + 1
+            db_total_ticker = 0
+        Else
+        'if tickers are the same
+        db_total_ticker = db_total_ticker + Cells(i, 7).Value
+        End If
+    Next i
+Next wksheet
+End Sub
+
+
